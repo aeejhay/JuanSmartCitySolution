@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "generated.grpc.litolapis";
+option java_outer_classname = "LitoLapisProto";
+
+package litolapis;
+
+// Service: Lito Lapis - Smart GPS Pen for Students
+service LitoLapis {
+  // Get the current location of a student's smart pen
+  rpc GetCurrentLocation (PenID) returns (GPSData);
+
+  // Stream real-time location updates of the student’s pen
+  rpc TrackStudentLive (PenID) returns (stream LocationUpdates);
+
+  // Bi-directional communication for lost student alerts
+  rpc AlertLostStudent (stream GPSData) returns (SafetyAlert);
+}
+
+// Smart pen unique identifier
+message PenID {
+  string pen_serial = 1;
+}
+
+// GPS data containing coordinates
+message GPSData {
+  double latitude = 1;
+  double longitude = 2;
+  string timestamp = 3;
+}
+
+// Location updates streamed for students
+message LocationUpdates {
+  string student_name = 1;
+  GPSData gps = 2;
+}
+
+// Alert if a student is lost
+message SafetyAlert {
+  string alert_message = 1;
+  GPSData last_known_location = 2;
+}
+

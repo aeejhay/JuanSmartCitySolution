@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "generated.grpc.juantamad";
+option java_outer_classname = "JuanTamadProto";
+
+package juantamad;
+
+// Service: Juan Tamad - AI Traffic Oracle
+service JuanTamad {
+  // Check traffic status for a specific location
+  rpc CheckTrafficStatus (Location) returns (TrafficCondition);
+
+  // Stream live traffic updates for city residents
+  rpc LiveTrafficReports (Location) returns (stream TrafficUpdate);
+
+  // Receive user-generated traffic reports to enhance congestion analysis
+  rpc CrowdsourcedTrafficData (stream UserInput) returns (CityTrafficAnalysis);
+}
+
+// Common message for a location
+message Location {
+  string city = 1;
+  string street = 2;
+}
+
+// Traffic condition response for a location
+message TrafficCondition {
+  string congestion_level = 1;  // Low, Medium, High, Severe
+  string suggestion = 2;  // Stay Home, Moderate Traffic, Heavy Congestion
+}
+
+// Live traffic updates streamed from the system
+message TrafficUpdate {
+  string location = 1;
+  string status = 2;
+  int64 timestamp = 3;
+}
+
+// User-generated input for traffic reporting
+message UserInput {
+  string username = 1;
+  string location = 2;
+  string traffic_condition = 3;  // Light, Moderate, Heavy
+}
+
+// Analyzed traffic report from crowdsourced data
+message CityTrafficAnalysis {
+  string report_summary = 1;
+  string suggested_alternative_routes = 2;
+}
+

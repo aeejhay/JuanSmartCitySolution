@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "generated.grpc.marites";
+option java_outer_classname = "MaritesProto";
+
+package marites;
+
+// Service: Marites - AI Public Camera Robot
+service Marites {
+  // Scan a person's face and return identity data
+  rpc ScanFace (PersonImage) returns (IdentityData);
+
+  // Stream real-time surveillance alerts from different locations
+  rpc LiveSurveillance (Location) returns (stream CrimeAlert);
+
+  // Report multiple suspicious activities detected by the system
+  rpc ReportSuspiciousActivity (stream PersonData) returns (InvestigationReport);
+}
+
+
+// Common message for a location
+message Location {
+  string city = 1;
+  string street = 2;
+}
+
+// Message for image-based face scanning
+message PersonImage {
+  bytes image_data = 1;
+}
+
+// Identity data returned after scanning a face
+message IdentityData {
+  string name = 1;
+  string national_id = 2;
+  bool is_suspect = 3;
+}
+
+// Crime alert message for real-time surveillance
+message CrimeAlert {
+  string description = 1;
+  string suspect_name = 2;
+  string location = 3;
+  int64 timestamp = 4;
+}
+
+// Suspicious activity data reported to authorities
+message PersonData {
+  string person_name = 1;
+  string description = 2;
+  Location last_seen = 3;
+}
+
+// Investigation report returned after reporting suspicious activity
+message InvestigationReport {
+  bool case_opened = 1;
+  string assigned_officer = 2;
+  string case_id = 3;
+}
