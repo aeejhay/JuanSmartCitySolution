@@ -30,19 +30,19 @@ public class MaritesClient {
     }
 
 //    public void scanFace() {
-//        System.out.println("🔍 Scanning Face...");
+//        System.out.println("Scanning Face...");
 //        PersonImage image = PersonImage.newBuilder().setImageData(new byte[10]).build();
 //        IdentityData response = blockingStub.scanFace(image);
-//        System.out.println("👤 Identity: " + response.getName() + " | Suspect: " + response.getIsSuspect());
+//        System.out.println("Identity: " + response.getName() + " | Suspect: " + response.getIsSuspect());
 //    }
 
     public void startLiveSurveillance() {
-        System.out.println("📹 Live Surveillance Started...");
+        System.out.println("Live Surveillance Started...");
         Location location = Location.newBuilder().setCity("Manila").setStreet("Roxas Blvd").build();
         asyncStub.liveSurveillance(location, new StreamObserver<CrimeAlert>() {
             @Override
             public void onNext(CrimeAlert alert) {
-                System.out.println("🚨 ALERT: " + alert.getDescription() + " at " + alert.getLocation());
+                System.out.println("ALERT: " + alert.getDescription() + " at " + alert.getLocation());
             }
 
             @Override
@@ -52,7 +52,7 @@ public class MaritesClient {
 
             @Override
             public void onCompleted() {
-                System.out.println("✅ Surveillance stream completed.");
+                System.out.println("Surveillance stream completed.");
             }
         });
     }
@@ -62,7 +62,7 @@ public class MaritesClient {
         StreamObserver<PersonData> requestObserver = asyncStub.reportSuspiciousActivity(new StreamObserver<InvestigationReport>() {
             @Override
             public void onNext(InvestigationReport report) {
-                System.out.println("📋 Case Opened: " + report.getCaseId() + " | Officer: " + report.getAssignedOfficer());
+                System.out.println("Case Opened: " + report.getCaseId() + " | Officer: " + report.getAssignedOfficer());
             }
 
             @Override
@@ -72,7 +72,7 @@ public class MaritesClient {
 
             @Override
             public void onCompleted() {
-                System.out.println("✅ Report submitted successfully.");
+                System.out.println("Report submitted successfully.");
                 latch.countDown();
             }
         });

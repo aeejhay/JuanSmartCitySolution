@@ -30,19 +30,19 @@ public class LitoLapisClient {
     }
 
     public void getStudentLocation() {
-        System.out.println("📍 Fetching Student Location...");
+        System.out.println("Fetching Student Location...");
         PenID penId = PenID.newBuilder().setPenSerial("PEN-001").build();
         GPSData response = blockingStub.getCurrentLocation(penId);
-        System.out.println("🗺️ Location: " + response.getLatitude() + ", " + response.getLongitude());
+        System.out.println("Location: " + response.getLatitude() + ", " + response.getLongitude());
     }
 
     public void trackStudentLive() {
-        System.out.println("🛰️ Live Tracking Started...");
+        System.out.println("Live Tracking Started...");
         PenID penId = PenID.newBuilder().setPenSerial("PEN-001").build();
         asyncStub.trackStudentLive(penId, new StreamObserver<LocationUpdates>() {
             @Override
             public void onNext(LocationUpdates update) {
-                System.out.println("📌 " + update.getStudentName() + " moved to: " + update.getGps().getLatitude() + ", " + update.getGps().getLongitude());
+                System.out.println(update.getStudentName() + " moved to: " + update.getGps().getLatitude() + ", " + update.getGps().getLongitude());
             }
 
             @Override
@@ -52,7 +52,7 @@ public class LitoLapisClient {
 
             @Override
             public void onCompleted() {
-                System.out.println("✅ Student tracking completed.");
+                System.out.println("Student tracking completed.");
             }
         });
     }

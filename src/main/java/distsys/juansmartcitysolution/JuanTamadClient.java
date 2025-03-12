@@ -9,6 +9,8 @@ package distsys.juansmartcitysolution;
  * @author ajand
  */
 
+//this is a sample comment
+
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
@@ -30,19 +32,19 @@ public class JuanTamadClient {
     }
 
     public void checkTraffic() {
-        System.out.println("🚦 Checking Traffic...");
+        System.out.println("Checking Traffic...");
         Location location = Location.newBuilder().setCity("Makati").setStreet("Ayala Ave").build();
         TrafficCondition response = blockingStub.checkTrafficStatus(location);
-        System.out.println("🚗 Traffic: " + response.getCongestionLevel() + " | Advice: " + response.getSuggestion());
+        System.out.println("Traffic: " + response.getCongestionLevel() + " | Advice: " + response.getSuggestion());
     }
 
     public void getLiveTrafficUpdates() {
-        System.out.println("📡 Live Traffic Updates Started...");
+        System.out.println("Live Traffic Updates Started...");
         Location location = Location.newBuilder().setCity("Quezon City").setStreet("EDSA").build();
         asyncStub.liveTrafficReports(location, new StreamObserver<TrafficUpdate>() {
             @Override
             public void onNext(TrafficUpdate update) {
-                System.out.println("🛑 Update: " + update.getStatus() + " at " + update.getLocation());
+                System.out.println("Update: " + update.getStatus() + " at " + update.getLocation());
             }
 
             @Override
@@ -52,7 +54,7 @@ public class JuanTamadClient {
 
             @Override
             public void onCompleted() {
-                System.out.println("✅ Traffic updates completed.");
+                System.out.println("Traffic updates completed.");
             }
         });
     }
@@ -62,7 +64,7 @@ public class JuanTamadClient {
         StreamObserver<UserInput> requestObserver = asyncStub.crowdsourcedTrafficData(new StreamObserver<CityTrafficAnalysis>() {
             @Override
             public void onNext(CityTrafficAnalysis analysis) {
-                System.out.println("📊 Traffic Report: " + analysis.getReportSummary());
+                System.out.println("Traffic Report: " + analysis.getReportSummary());
             }
 
             @Override
@@ -72,7 +74,7 @@ public class JuanTamadClient {
 
             @Override
             public void onCompleted() {
-                System.out.println("✅ Traffic data submitted.");
+                System.out.println("Traffic data submitted.");
                 latch.countDown();
             }
         });
