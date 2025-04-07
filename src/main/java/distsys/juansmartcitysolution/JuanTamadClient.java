@@ -36,6 +36,7 @@ public class JuanTamadClient {
         Location location = Location.newBuilder().setCity("Makati").setStreet("Ayala Ave").build();
         TrafficCondition response = blockingStub.checkTrafficStatus(location);
         System.out.println("Traffic: " + response.getCongestionLevel() + " | Advice: " + response.getSuggestion());
+        System.out.println("-------------------------------------------------");
     }
 
     public void getLiveTrafficUpdates() {
@@ -57,6 +58,7 @@ public class JuanTamadClient {
                 System.out.println("Traffic updates completed.");
             }
         });
+        System.out.println("-------------------------------------------------");
     }
 
     public void reportTrafficData() throws InterruptedException {
@@ -82,6 +84,7 @@ public class JuanTamadClient {
         requestObserver.onNext(UserInput.newBuilder().setUsername("User123").setTrafficCondition("Heavy").build());
         requestObserver.onCompleted();
         latch.await(3, TimeUnit.SECONDS);
+        System.out.println("-------------------------------------------------");
     }
 
     public static void main(String[] args) throws InterruptedException {

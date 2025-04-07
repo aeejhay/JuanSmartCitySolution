@@ -8,13 +8,13 @@ package marites;
 
 // Service: Marites - AI Public Camera Robot
 service Marites {
-  // Scan a person's face and return identity data
+  // Scan a person's face and return identity data (Unary)
   rpc ScanFace (PersonImage) returns (IdentityData);
 
-  // Stream real-time surveillance alerts from different locations
+  // Stream real-time surveillance alerts from different locations (Server Streaming)
   rpc LiveSurveillance (Location) returns (stream CrimeAlert);
 
-  // Report multiple suspicious activities detected by the system
+  // Report multiple suspicious activities detected by the system (Client Streaming)
   rpc ReportSuspiciousActivity (stream PersonData) returns (InvestigationReport);
 }
 

@@ -158,7 +158,7 @@ public final class JuanTamadGrpc {
 
     /**
      * <pre>
-     * Check traffic status for a specific location
+     * Check traffic status for a specific location (Unary)
      * </pre>
      */
     public void checkTrafficStatus(generated.grpc.juantamad.Location request,
@@ -168,7 +168,7 @@ public final class JuanTamadGrpc {
 
     /**
      * <pre>
-     * Stream live traffic updates for city residents
+     * Stream live traffic updates for city residents (Server Streaming)
      * </pre>
      */
     public void liveTrafficReports(generated.grpc.juantamad.Location request,
@@ -178,7 +178,7 @@ public final class JuanTamadGrpc {
 
     /**
      * <pre>
-     * Receive user-generated traffic reports to enhance congestion analysis
+     * Receive user-generated traffic reports to enhance congestion analysis (Client Streaming)
      * </pre>
      */
     public io.grpc.stub.StreamObserver<generated.grpc.juantamad.UserInput> crowdsourcedTrafficData(
@@ -236,7 +236,7 @@ public final class JuanTamadGrpc {
 
     /**
      * <pre>
-     * Check traffic status for a specific location
+     * Check traffic status for a specific location (Unary)
      * </pre>
      */
     public void checkTrafficStatus(generated.grpc.juantamad.Location request,
@@ -247,7 +247,7 @@ public final class JuanTamadGrpc {
 
     /**
      * <pre>
-     * Stream live traffic updates for city residents
+     * Stream live traffic updates for city residents (Server Streaming)
      * </pre>
      */
     public void liveTrafficReports(generated.grpc.juantamad.Location request,
@@ -258,7 +258,7 @@ public final class JuanTamadGrpc {
 
     /**
      * <pre>
-     * Receive user-generated traffic reports to enhance congestion analysis
+     * Receive user-generated traffic reports to enhance congestion analysis (Client Streaming)
      * </pre>
      */
     public io.grpc.stub.StreamObserver<generated.grpc.juantamad.UserInput> crowdsourcedTrafficData(
@@ -291,7 +291,7 @@ public final class JuanTamadGrpc {
 
     /**
      * <pre>
-     * Check traffic status for a specific location
+     * Check traffic status for a specific location (Unary)
      * </pre>
      */
     public generated.grpc.juantamad.TrafficCondition checkTrafficStatus(generated.grpc.juantamad.Location request) {
@@ -301,7 +301,7 @@ public final class JuanTamadGrpc {
 
     /**
      * <pre>
-     * Stream live traffic updates for city residents
+     * Stream live traffic updates for city residents (Server Streaming)
      * </pre>
      */
     public java.util.Iterator<generated.grpc.juantamad.TrafficUpdate> liveTrafficReports(
@@ -334,7 +334,7 @@ public final class JuanTamadGrpc {
 
     /**
      * <pre>
-     * Check traffic status for a specific location
+     * Check traffic status for a specific location (Unary)
      * </pre>
      */
     public com.google.common.util.concurrent.ListenableFuture<generated.grpc.juantamad.TrafficCondition> checkTrafficStatus(

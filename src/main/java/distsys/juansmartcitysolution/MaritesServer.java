@@ -19,8 +19,17 @@ import java.util.logging.Logger;
 
 public class MaritesServer extends MaritesGrpc.MaritesImplBase {
     private static final Logger logger = Logger.getLogger(MaritesServer.class.getName());
+    
+    private static boolean started = false;
 
     public static void main(String[] args) throws IOException, InterruptedException {
+        
+        if (started) {
+            System.out.println("Marites Server already running.");
+            return;
+        }
+        started = true;
+        
         MaritesServer server = new MaritesServer();
         Server grpcServer = ServerBuilder.forPort(50051)
                 .addService(server)

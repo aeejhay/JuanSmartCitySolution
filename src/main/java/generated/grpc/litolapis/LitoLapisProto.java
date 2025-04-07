@@ -50,13 +50,13 @@ public final class LitoLapisProto {
       "\001 \001(\t\022\037\n\003gps\030\002 \001(\0132\022.litolapis.GPSData\"U" +
       "\n\013SafetyAlert\022\025\n\ralert_message\030\001 \001(\t\022/\n\023" +
       "last_known_location\030\002 \001(\0132\022.litolapis.GP" +
-      "SData2\315\001\n\tLitoLapis\022:\n\022GetCurrentLocatio" +
+      "SData2\317\001\n\tLitoLapis\022:\n\022GetCurrentLocatio" +
       "n\022\020.litolapis.PenID\032\022.litolapis.GPSData\022" +
       "B\n\020TrackStudentLive\022\020.litolapis.PenID\032\032." +
-      "litolapis.LocationUpdates0\001\022@\n\020AlertLost" +
+      "litolapis.LocationUpdates0\001\022B\n\020AlertLost" +
       "Student\022\022.litolapis.GPSData\032\026.litolapis." +
-      "SafetyAlert(\001B,\n\030generated.grpc.litolapi" +
-      "sB\016LitoLapisProtoP\001b\006proto3"
+      "SafetyAlert(\0010\001B,\n\030generated.grpc.litola" +
+      "pisB\016LitoLapisProtoP\001b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {

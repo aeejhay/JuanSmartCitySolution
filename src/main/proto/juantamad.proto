@@ -8,13 +8,13 @@ package juantamad;
 
 // Service: Juan Tamad - AI Traffic Oracle
 service JuanTamad {
-  // Check traffic status for a specific location
+  // Check traffic status for a specific location (Unary)
   rpc CheckTrafficStatus (Location) returns (TrafficCondition);
 
-  // Stream live traffic updates for city residents
+  // Stream live traffic updates for city residents (Server Streaming)
   rpc LiveTrafficReports (Location) returns (stream TrafficUpdate);
 
-  // Receive user-generated traffic reports to enhance congestion analysis
+  // Receive user-generated traffic reports to enhance congestion analysis (Client Streaming)
   rpc CrowdsourcedTrafficData (stream UserInput) returns (CityTrafficAnalysis);
 }
 

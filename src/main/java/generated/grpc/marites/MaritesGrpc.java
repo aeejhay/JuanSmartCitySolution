@@ -158,7 +158,7 @@ public final class MaritesGrpc {
 
     /**
      * <pre>
-     * Scan a person's face and return identity data
+     * Scan a person's face and return identity data (Unary)
      * </pre>
      */
     public void scanFace(generated.grpc.marites.PersonImage request,
@@ -168,7 +168,7 @@ public final class MaritesGrpc {
 
     /**
      * <pre>
-     * Stream real-time surveillance alerts from different locations
+     * Stream real-time surveillance alerts from different locations (Server Streaming)
      * </pre>
      */
     public void liveSurveillance(generated.grpc.marites.Location request,
@@ -178,7 +178,7 @@ public final class MaritesGrpc {
 
     /**
      * <pre>
-     * Report multiple suspicious activities detected by the system
+     * Report multiple suspicious activities detected by the system (Client Streaming)
      * </pre>
      */
     public io.grpc.stub.StreamObserver<generated.grpc.marites.PersonData> reportSuspiciousActivity(
@@ -236,7 +236,7 @@ public final class MaritesGrpc {
 
     /**
      * <pre>
-     * Scan a person's face and return identity data
+     * Scan a person's face and return identity data (Unary)
      * </pre>
      */
     public void scanFace(generated.grpc.marites.PersonImage request,
@@ -247,7 +247,7 @@ public final class MaritesGrpc {
 
     /**
      * <pre>
-     * Stream real-time surveillance alerts from different locations
+     * Stream real-time surveillance alerts from different locations (Server Streaming)
      * </pre>
      */
     public void liveSurveillance(generated.grpc.marites.Location request,
@@ -258,7 +258,7 @@ public final class MaritesGrpc {
 
     /**
      * <pre>
-     * Report multiple suspicious activities detected by the system
+     * Report multiple suspicious activities detected by the system (Client Streaming)
      * </pre>
      */
     public io.grpc.stub.StreamObserver<generated.grpc.marites.PersonData> reportSuspiciousActivity(
@@ -291,7 +291,7 @@ public final class MaritesGrpc {
 
     /**
      * <pre>
-     * Scan a person's face and return identity data
+     * Scan a person's face and return identity data (Unary)
      * </pre>
      */
     public generated.grpc.marites.IdentityData scanFace(generated.grpc.marites.PersonImage request) {
@@ -301,7 +301,7 @@ public final class MaritesGrpc {
 
     /**
      * <pre>
-     * Stream real-time surveillance alerts from different locations
+     * Stream real-time surveillance alerts from different locations (Server Streaming)
      * </pre>
      */
     public java.util.Iterator<generated.grpc.marites.CrimeAlert> liveSurveillance(
@@ -334,7 +334,7 @@ public final class MaritesGrpc {
 
     /**
      * <pre>
-     * Scan a person's face and return identity data
+     * Scan a person's face and return identity data (Unary)
      * </pre>
      */
     public com.google.common.util.concurrent.ListenableFuture<generated.grpc.marites.IdentityData> scanFace(

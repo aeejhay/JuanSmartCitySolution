@@ -101,7 +101,7 @@ public final class LitoLapisGrpc {
       fullMethodName = SERVICE_NAME + '/' + "AlertLostStudent",
       requestType = generated.grpc.litolapis.GPSData.class,
       responseType = generated.grpc.litolapis.SafetyAlert.class,
-      methodType = io.grpc.MethodDescriptor.MethodType.CLIENT_STREAMING)
+      methodType = io.grpc.MethodDescriptor.MethodType.BIDI_STREAMING)
   public static io.grpc.MethodDescriptor<generated.grpc.litolapis.GPSData,
       generated.grpc.litolapis.SafetyAlert> getAlertLostStudentMethod() {
     io.grpc.MethodDescriptor<generated.grpc.litolapis.GPSData, generated.grpc.litolapis.SafetyAlert> getAlertLostStudentMethod;
@@ -110,7 +110,7 @@ public final class LitoLapisGrpc {
         if ((getAlertLostStudentMethod = LitoLapisGrpc.getAlertLostStudentMethod) == null) {
           LitoLapisGrpc.getAlertLostStudentMethod = getAlertLostStudentMethod = 
               io.grpc.MethodDescriptor.<generated.grpc.litolapis.GPSData, generated.grpc.litolapis.SafetyAlert>newBuilder()
-              .setType(io.grpc.MethodDescriptor.MethodType.CLIENT_STREAMING)
+              .setType(io.grpc.MethodDescriptor.MethodType.BIDI_STREAMING)
               .setFullMethodName(generateFullMethodName(
                   "litolapis.LitoLapis", "AlertLostStudent"))
               .setSampledToLocalTracing(true)
@@ -158,7 +158,7 @@ public final class LitoLapisGrpc {
 
     /**
      * <pre>
-     * Get the current location of a student's smart pen
+     * Get the current location of a student's smart pen (Unary)
      * </pre>
      */
     public void getCurrentLocation(generated.grpc.litolapis.PenID request,
@@ -168,7 +168,7 @@ public final class LitoLapisGrpc {
 
     /**
      * <pre>
-     * Stream real-time location updates of the student’s pen
+     * Stream real-time location updates of the student’s pen (Server Streaming)
      * </pre>
      */
     public void trackStudentLive(generated.grpc.litolapis.PenID request,
@@ -204,7 +204,7 @@ public final class LitoLapisGrpc {
                   this, METHODID_TRACK_STUDENT_LIVE)))
           .addMethod(
             getAlertLostStudentMethod(),
-            asyncClientStreamingCall(
+            asyncBidiStreamingCall(
               new MethodHandlers<
                 generated.grpc.litolapis.GPSData,
                 generated.grpc.litolapis.SafetyAlert>(
@@ -236,7 +236,7 @@ public final class LitoLapisGrpc {
 
     /**
      * <pre>
-     * Get the current location of a student's smart pen
+     * Get the current location of a student's smart pen (Unary)
      * </pre>
      */
     public void getCurrentLocation(generated.grpc.litolapis.PenID request,
@@ -247,7 +247,7 @@ public final class LitoLapisGrpc {
 
     /**
      * <pre>
-     * Stream real-time location updates of the student’s pen
+     * Stream real-time location updates of the student’s pen (Server Streaming)
      * </pre>
      */
     public void trackStudentLive(generated.grpc.litolapis.PenID request,
@@ -263,7 +263,7 @@ public final class LitoLapisGrpc {
      */
     public io.grpc.stub.StreamObserver<generated.grpc.litolapis.GPSData> alertLostStudent(
         io.grpc.stub.StreamObserver<generated.grpc.litolapis.SafetyAlert> responseObserver) {
-      return asyncClientStreamingCall(
+      return asyncBidiStreamingCall(
           getChannel().newCall(getAlertLostStudentMethod(), getCallOptions()), responseObserver);
     }
   }
@@ -291,7 +291,7 @@ public final class LitoLapisGrpc {
 
     /**
      * <pre>
-     * Get the current location of a student's smart pen
+     * Get the current location of a student's smart pen (Unary)
      * </pre>
      */
     public generated.grpc.litolapis.GPSData getCurrentLocation(generated.grpc.litolapis.PenID request) {
@@ -301,7 +301,7 @@ public final class LitoLapisGrpc {
 
     /**
      * <pre>
-     * Stream real-time location updates of the student’s pen
+     * Stream real-time location updates of the student’s pen (Server Streaming)
      * </pre>
      */
     public java.util.Iterator<generated.grpc.litolapis.LocationUpdates> trackStudentLive(
@@ -334,7 +334,7 @@ public final class LitoLapisGrpc {
 
     /**
      * <pre>
-     * Get the current location of a student's smart pen
+     * Get the current location of a student's smart pen (Unary)
      * </pre>
      */
     public com.google.common.util.concurrent.ListenableFuture<generated.grpc.litolapis.GPSData> getCurrentLocation(

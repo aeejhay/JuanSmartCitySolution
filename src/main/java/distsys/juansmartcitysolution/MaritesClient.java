@@ -13,6 +13,7 @@ import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
 import generated.grpc.marites.*;
+import com.google.protobuf.ByteString;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -20,6 +21,10 @@ import java.util.concurrent.TimeUnit;
 public class MaritesClient {
     private final MaritesGrpc.MaritesBlockingStub blockingStub;
     private final MaritesGrpc.MaritesStub asyncStub;
+    
+    //Just for simulation I used fakeData
+    byte[] fakeData = new byte[10]; // simulate image
+    ByteString byteString = ByteString.copyFrom(fakeData);
 
     public MaritesClient() {
         ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 50051)
@@ -29,12 +34,13 @@ public class MaritesClient {
         asyncStub = MaritesGrpc.newStub(channel);
     }
 
-//    public void scanFace() {
-//        System.out.println("Scanning Face...");
-//        PersonImage image = PersonImage.newBuilder().setImageData(new byte[10]).build();
-//        IdentityData response = blockingStub.scanFace(image);
-//        System.out.println("Identity: " + response.getName() + " | Suspect: " + response.getIsSuspect());
-//    }
+    public void scanFace() {
+        System.out.println("Scanning Face...");
+        PersonImage image = PersonImage.newBuilder().setImageData(byteString).build();
+        IdentityData response = blockingStub.scanFace(image);
+        System.out.println("Identity: " + response.getName() + " | Suspect: " + response.getIsSuspect());
+        System.out.println("-------------------------------------------------");
+    }
 
     public void startLiveSurveillance() {
         System.out.println("Live Surveillance Started...");
@@ -55,9 +61,11 @@ public class MaritesClient {
                 System.out.println("Surveillance stream completed.");
             }
         });
+        System.out.println("-------------------------------------------------");
     }
 
     public void reportSuspiciousActivity() throws InterruptedException {
+        System.out.println("Report Suspicious Activity...");
         CountDownLatch latch = new CountDownLatch(1);
         StreamObserver<PersonData> requestObserver = asyncStub.reportSuspiciousActivity(new StreamObserver<InvestigationReport>() {
             @Override
@@ -80,11 +88,12 @@ public class MaritesClient {
         requestObserver.onNext(PersonData.newBuilder().setPersonName("Unknown Individual").setDescription("Suspicious behavior").build());
         requestObserver.onCompleted();
         latch.await(3, TimeUnit.SECONDS);
+        System.out.println("-------------------------------------------------");
     }
 
     public static void main(String[] args) throws InterruptedException {
         MaritesClient client = new MaritesClient();
-        //client.scanFace();
+        client.scanFace();
         client.startLiveSurveillance();
         client.reportSuspiciousActivity();
     }

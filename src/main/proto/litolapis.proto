@@ -8,14 +8,14 @@ package litolapis;
 
 // Service: Lito Lapis - Smart GPS Pen for Students
 service LitoLapis {
-  // Get the current location of a student's smart pen
+  // Get the current location of a student's smart pen (Unary)
   rpc GetCurrentLocation (PenID) returns (GPSData);
 
-  // Stream real-time location updates of the student’s pen
+  // Stream real-time location updates of the student’s pen (Server Streaming)
   rpc TrackStudentLive (PenID) returns (stream LocationUpdates);
 
   // Bi-directional communication for lost student alerts
-  rpc AlertLostStudent (stream GPSData) returns (SafetyAlert);
+  rpc AlertLostStudent (stream GPSData) returns (stream SafetyAlert);
 }
 
 // Smart pen unique identifier
