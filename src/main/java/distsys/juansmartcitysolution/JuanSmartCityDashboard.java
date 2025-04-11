@@ -1,23 +1,21 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ * Juan Smart City Dashboard - with Status-Tagged Tabs for Service Availability
  */
 package distsys.juansmartcitysolution;
 
-/**
- *
- * @author ajand
- */
+import distsys.discovery.ServiceHealth;
+import distsys.discovery.ServiceRegistry;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.io.PrintStream;
+import java.util.Map;
 
 public class JuanSmartCityDashboard extends JFrame {
 
-    private JTextArea maritesServerOutput, maritesClientOutput;
-    private JTextArea juanServerOutput, juanClientOutput;
-    private JTextArea litoServerOutput, litoClientOutput;
+    private JTextArea maritesClientOutput;
+    private JTextArea juanClientOutput;
+    private JTextArea litoClientOutput;
+    private JTabbedPane tabs;
 
     public JuanSmartCityDashboard() {
         setTitle("Juan Smart City Dashboard");
@@ -25,39 +23,69 @@ public class JuanSmartCityDashboard extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        JTabbedPane tabs = new JTabbedPane();
-        tabs.add("Marites", createServicePanel("Marites"));
-        tabs.add("Juan Tamad", createServicePanel("Juan Tamad"));
-        tabs.add("Lito Lapis", createServicePanel("Lito Lapis"));
+        tabs = new JTabbedPane();
+        tabs.addTab(getServiceTabTitle("Marites"), createServicePanel("Marites"));
+        tabs.addTab(getServiceTabTitle("Juan Tamad"), createServicePanel("Juan Tamad"));
+        tabs.addTab(getServiceTabTitle("Lito Lapis"), createServicePanel("Lito Lapis"));
 
         add(tabs);
     }
 
+    private String getServiceTabTitle(String serviceName) {
+        int port = ServiceRegistry.getPort(serviceName);
+        boolean isOnline = ServiceHealth.isServiceRunning(port);
+        return serviceName + (isOnline ? " (ONLINE)" : " (OFFLINE)");
+    }
+
     private JPanel createServicePanel(String serviceName) {
         JPanel panel = new JPanel(new BorderLayout());
-        JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 10, 10));
+        JPanel buttonPanel = new JPanel(new GridLayout(2, 5, 10, 10));
 
-        JTextArea serverArea = new JTextArea(10, 40);
-        JTextArea clientArea = new JTextArea(10, 40);
-        serverArea.setEditable(false);
+        JTextArea clientArea = new JTextArea(15, 80);
         clientArea.setEditable(false);
-
-        JScrollPane serverScroll = new JScrollPane(serverArea);
         JScrollPane clientScroll = new JScrollPane(clientArea);
+
+        JButton discoverBtn = new JButton("🔍 Discover Service");
+        discoverBtn.addActionListener(e -> {
+            int port = ServiceRegistry.getPort(serviceName);
+            boolean status = ServiceHealth.isServiceRunning(port);
+            String statusLabel = status ? "✅ ONLINE" : "❌ OFFLINE";
+            JOptionPane.showMessageDialog(panel,
+                    serviceName + " Service\nPort: " + port + "\nStatus: " + statusLabel,
+                    "Service Discovery",
+                    JOptionPane.INFORMATION_MESSAGE);
+            updateTabStatus();
+        });
+
+        JButton exportBtn = new JButton("💾 Export Log");
+        exportBtn.addActionListener(e -> exportLog(clientArea, serviceName));
+
+        JButton clearBtn = new JButton("❌ Clear Results");
+        clearBtn.addActionListener(e -> clientArea.setText(""));
+
+        JButton runServerBtn = new JButton("▶ Run Server");
+        runServerBtn.addActionListener(e -> {
+            runServer(serviceName);
+            clientArea.append("[INFO] " + serviceName + " server running...\n");
+            updateTabStatus();
+        });
 
         if (serviceName.equals("Marites")) {
             JButton scanFace = new JButton("Scan Face (Unary)");
             JButton surveillance = new JButton("Live Surveillance (Server Streaming)");
-            JButton report = new JButton("Report Suspicious Activity (Client Streaming)");
+            JButton report = new JButton("Report Suspicious (Client Streaming)");
 
-            scanFace.addActionListener(e -> runSim("MaritesServer", "MaritesClient", serverArea, clientArea, "[Unary] Scanned face..."));
-            surveillance.addActionListener(e -> runSim("MaritesServer", "MaritesClient", serverArea, clientArea, "[Server Streaming] Surveillance in progress..."));
-            report.addActionListener(e -> runSim("MaritesServer", "MaritesClient", serverArea, clientArea, "[Client Streaming] Suspicious data sent..."));
+            scanFace.addActionListener(e -> tryRunSim(serviceName, "MaritesServer", "MaritesClient", clientArea, "[Unary] Scanned face..."));
+            surveillance.addActionListener(e -> tryRunSim(serviceName, "MaritesServer", "MaritesClient", clientArea, "[Server Streaming] Surveillance in progress..."));
+            report.addActionListener(e -> tryRunSim(serviceName, "MaritesServer", "MaritesClient", clientArea, "[Client Streaming] Suspicious data sent..."));
 
             buttonPanel.add(scanFace);
             buttonPanel.add(surveillance);
             buttonPanel.add(report);
-            maritesServerOutput = serverArea;
+            buttonPanel.add(discoverBtn);
+            buttonPanel.add(exportBtn);
+            buttonPanel.add(clearBtn);
+            buttonPanel.add(runServerBtn);
             maritesClientOutput = clientArea;
         }
 
@@ -66,14 +94,17 @@ public class JuanSmartCityDashboard extends JFrame {
             JButton live = new JButton("Live Traffic Reports (Server Streaming)");
             JButton crowd = new JButton("Crowdsourced Traffic Data (Client Streaming)");
 
-            check.addActionListener(e -> runSim("JuanTamadServer", "JuanTamadClient", serverArea, clientArea, "[Unary] Traffic checked: MODERATE"));
-            live.addActionListener(e -> runSim("JuanTamadServer", "JuanTamadClient", serverArea, clientArea, "[Server Streaming] Streaming traffic reports..."));
-            crowd.addActionListener(e -> runSim("JuanTamadServer", "JuanTamadClient", serverArea, clientArea, "[Client Streaming] User data submitted."));
+            check.addActionListener(e -> tryRunSim(serviceName, "JuanTamadServer", "JuanTamadClient", clientArea, "[Unary] Traffic checked: MODERATE"));
+            live.addActionListener(e -> tryRunSim(serviceName, "JuanTamadServer", "JuanTamadClient", clientArea, "[Server Streaming] Streaming traffic reports..."));
+            crowd.addActionListener(e -> tryRunSim(serviceName, "JuanTamadServer", "JuanTamadClient", clientArea, "[Client Streaming] User data submitted."));
 
             buttonPanel.add(check);
             buttonPanel.add(live);
             buttonPanel.add(crowd);
-            juanServerOutput = serverArea;
+            buttonPanel.add(discoverBtn);
+            buttonPanel.add(exportBtn);
+            buttonPanel.add(clearBtn);
+            buttonPanel.add(runServerBtn);
             juanClientOutput = clientArea;
         }
 
@@ -82,25 +113,39 @@ public class JuanSmartCityDashboard extends JFrame {
             JButton track = new JButton("Track Student Live (Server Streaming)");
             JButton alert = new JButton("Alert Student Lost (Bi-Directional)");
 
-            locate.addActionListener(e -> runSim("LitoLapisServer", "LitoLapisClient", serverArea, clientArea, "[Unary] GPS acquired: 14.5995, 120.9842"));
-            track.addActionListener(e -> runSim("LitoLapisServer", "LitoLapisClient", serverArea, clientArea, "[Server Streaming] Tracking in progress..."));
-            alert.addActionListener(e -> runSim("LitoLapisServer", "LitoLapisClient", serverArea, clientArea, "[Bi-Directional] Lost alert triggered."));
+            locate.addActionListener(e -> tryRunSim(serviceName, "LitoLapisServer", "LitoLapisClient", clientArea, "[Unary] GPS acquired: 14.5995, 120.9842"));
+            track.addActionListener(e -> tryRunSim(serviceName, "LitoLapisServer", "LitoLapisClient", clientArea, "[Server Streaming] Tracking in progress..."));
+            alert.addActionListener(e -> tryRunSim(serviceName, "LitoLapisServer", "LitoLapisClient", clientArea, "[Bi-Directional] Lost alert triggered."));
 
             buttonPanel.add(locate);
             buttonPanel.add(track);
             buttonPanel.add(alert);
-            litoServerOutput = serverArea;
+            buttonPanel.add(discoverBtn);
+            buttonPanel.add(exportBtn);
+            buttonPanel.add(clearBtn);
+            buttonPanel.add(runServerBtn);
             litoClientOutput = clientArea;
         }
 
-        JPanel outputPanel = new JPanel(new GridLayout(2, 1));
-        //outputPanel.add(labeledScrollPane("Server Output", serverScroll));
-        outputPanel.add(labeledScrollPane("Results", clientScroll));
-
         panel.add(buttonPanel, BorderLayout.NORTH);
-        panel.add(outputPanel, BorderLayout.CENTER);
+        panel.add(labeledScrollPane("Results", clientScroll), BorderLayout.CENTER);
 
         return panel;
+    }
+
+    private void updateTabStatus() {
+        tabs.setTitleAt(0, getServiceTabTitle("Marites"));
+        tabs.setTitleAt(1, getServiceTabTitle("Juan Tamad"));
+        tabs.setTitleAt(2, getServiceTabTitle("Lito Lapis"));
+    }
+
+    private void tryRunSim(String serviceName, String serverClass, String clientClass, JTextArea clientOut, String simulatedOutput) {
+        int port = ServiceRegistry.getPort(serviceName);
+        if (!ServiceHealth.isServiceRunning(port)) {
+            clientOut.append("[WARNING] Please run the " + serviceName + " server before accessing this method.\n");
+        } else {
+            runSim(serverClass, clientClass, clientOut, simulatedOutput);
+        }
     }
 
     private JPanel labeledScrollPane(String label, JScrollPane scrollPane) {
@@ -110,28 +155,8 @@ public class JuanSmartCityDashboard extends JFrame {
         return panel;
     }
 
-    private void runSim(String serverClass, String clientClass, JTextArea serverOut, JTextArea clientOut, String simulatedOutput) {
-        PrintStream serverStream = new PrintStream(new CustomOutputStream(serverOut));
+    private void runSim(String serverClass, String clientClass, JTextArea clientOut, String simulatedOutput) {
         PrintStream clientStream = new PrintStream(new CustomOutputStream(clientOut));
-
-        new Thread(() -> {
-            System.setOut(serverStream);
-            try {
-                switch (serverClass) {
-                    case "MaritesServer":
-                        distsys.juansmartcitysolution.MaritesServer.main(new String[]{});
-                        break;
-                    case "JuanTamadServer":
-                        distsys.juansmartcitysolution.JuanTamadServer.main(new String[]{});
-                        break;
-                    case "LitoLapisServer":
-                        distsys.juansmartcitysolution.LitoLapisServer.main(new String[]{});
-                        break;
-                }
-            } catch (Exception ex) {
-                serverOut.append("Error: " + ex.getMessage() + "\n");
-            }
-        }).start();
 
         new Thread(() -> {
             System.setOut(clientStream);
@@ -152,8 +177,41 @@ public class JuanSmartCityDashboard extends JFrame {
             }
         }).start();
 
-        // Simulated result
         clientOut.append(simulatedOutput + "\n");
+    }
+
+    private void runServer(String serviceName) {
+        new Thread(() -> {
+            try {
+                switch (serviceName) {
+                    case "Marites":
+                        distsys.juansmartcitysolution.MaritesServer.main(new String[]{});
+                        break;
+                    case "Juan Tamad":
+                        distsys.juansmartcitysolution.JuanTamadServer.main(new String[]{});
+                        break;
+                    case "Lito Lapis":
+                        distsys.juansmartcitysolution.LitoLapisServer.main(new String[]{});
+                        break;
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Error starting server: " + e.getMessage());
+            }
+        }).start();
+    }
+
+    private void exportLog(JTextArea area, String serviceName) {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setSelectedFile(new java.io.File(serviceName.toLowerCase() + "_log.txt"));
+        int option = fileChooser.showSaveDialog(this);
+        if (option == JFileChooser.APPROVE_OPTION) {
+            try (java.io.PrintWriter out = new java.io.PrintWriter(fileChooser.getSelectedFile())) {
+                out.println(area.getText());
+                JOptionPane.showMessageDialog(this, "Log saved successfully!");
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Failed to save log: " + ex.getMessage());
+            }
+        }
     }
 
     public static void main(String[] args) {
@@ -173,4 +231,4 @@ class CustomOutputStream extends java.io.OutputStream {
         textArea.append(String.valueOf((char) b));
         textArea.setCaretPosition(textArea.getDocument().getLength());
     }
-} 
+}

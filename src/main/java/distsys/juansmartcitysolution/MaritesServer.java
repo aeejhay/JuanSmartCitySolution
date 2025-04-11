@@ -60,7 +60,8 @@ public class MaritesServer extends MaritesGrpc.MaritesImplBase {
     @Override
     public void liveSurveillance(Location request, StreamObserver<CrimeAlert> responseObserver) {
         logger.info("Starting live surveillance at " + request.getCity());
-
+        
+        //Simulated crime alert or suspicious activity using for loops
         for (int i = 0; i < 5; i++) {
             CrimeAlert alert = CrimeAlert.newBuilder()
                     .setDescription("Suspicious activity detected!")
@@ -85,6 +86,7 @@ public class MaritesServer extends MaritesGrpc.MaritesImplBase {
         return new StreamObserver<PersonData>() {
             @Override
             public void onNext(PersonData personData) {
+                //Simulated reporting of suspicious activity
                 logger.info("Suspicious activity reported: " + personData.getPersonName());
 
                 InvestigationReport report = InvestigationReport.newBuilder()

@@ -54,27 +54,38 @@ public class MaritesClient {
         System.out.println("-------------------------------------------------");
     }
 
-    public void startLiveSurveillance() {
-        System.out.println("Live Surveillance Started...");
-        Location location = Location.newBuilder().setCity("Manila").setStreet("Roxas Blvd").build();
-        asyncStub.liveSurveillance(location, new StreamObserver<CrimeAlert>() {
-            @Override
-            public void onNext(CrimeAlert alert) {
-                System.out.println("ALERT: " + alert.getDescription() + " at " + alert.getLocation());
-            }
+    public void startLiveSurveillance() throws InterruptedException {
+    System.out.println("Live Surveillance Started...");
+    CountDownLatch latch = new CountDownLatch(1);
 
-            @Override
-            public void onError(Throwable t) {
-                System.out.println("Error: " + t.getMessage());
-            }
+    Location location = Location.newBuilder()
+            .setCity("Manila")
+            .setStreet("Roxas Blvd")
+            .build();
 
-            @Override
-            public void onCompleted() {
-                System.out.println("Surveillance stream completed.");
-            }
-        });
-        System.out.println("-------------------------------------------------");
-    }
+    asyncStub.liveSurveillance(location, new StreamObserver<CrimeAlert>() {
+        @Override
+        public void onNext(CrimeAlert alert) {
+            System.out.println("ALERT: " + alert.getDescription() + " at " + alert.getLocation());
+        }
+
+        @Override
+        public void onError(Throwable t) {
+            System.out.println("Error: " + t.getMessage());
+            latch.countDown();
+        }
+
+        @Override
+        public void onCompleted() {
+            System.out.println("Surveillance stream completed.");
+            latch.countDown();
+        }
+    });
+
+    latch.await(20, TimeUnit.SECONDS);  // Wait for server to finish
+    System.out.println("-------------------------------------------------");
+}
+
 
     public void reportSuspiciousActivity() throws InterruptedException {
         System.out.println("Report Suspicious Activity...");
@@ -96,9 +107,13 @@ public class MaritesClient {
                 latch.countDown();
             }
         });
-
-        requestObserver.onNext(PersonData.newBuilder().setPersonName("Unknown Individual").setDescription("Suspicious behavior").build());
+        
+        //Simulate one response from server
+        requestObserver.onNext(PersonData.newBuilder().setPersonName("Rodrigo Duterte").setDescription("Suspicious behavior").build());
+        
+        //end of client stream
         requestObserver.onCompleted();
+        //wait for server response
         latch.await(3, TimeUnit.SECONDS);
         System.out.println("-------------------------------------------------");
     }
