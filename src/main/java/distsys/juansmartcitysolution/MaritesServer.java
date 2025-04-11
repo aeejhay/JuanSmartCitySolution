@@ -9,10 +9,12 @@ package distsys.juansmartcitysolution;
  * @author ajand
  */
 
+import distsys.security.AuthInterceptor;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.grpc.stub.StreamObserver;
 import generated.grpc.marites.*;
+import io.grpc.ServerInterceptors;
 
 import java.io.IOException;
 import java.util.logging.Logger;
@@ -32,7 +34,7 @@ public class MaritesServer extends MaritesGrpc.MaritesImplBase {
         
         MaritesServer server = new MaritesServer();
         Server grpcServer = ServerBuilder.forPort(50051)
-                .addService(server)
+                .addService(ServerInterceptors.intercept(server, new AuthInterceptor()))
                 .build()
                 .start();
         

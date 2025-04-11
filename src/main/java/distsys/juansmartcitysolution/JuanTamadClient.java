@@ -19,6 +19,9 @@ import generated.grpc.juantamad.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import io.grpc.Metadata;
+import io.grpc.stub.MetadataUtils;
+
 public class JuanTamadClient {
     private final JuanTamadGrpc.JuanTamadBlockingStub blockingStub;
     private final JuanTamadGrpc.JuanTamadStub asyncStub;
@@ -27,8 +30,15 @@ public class JuanTamadClient {
         ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 50052)
                 .usePlaintext()
                 .build();
-        blockingStub = JuanTamadGrpc.newBlockingStub(channel);
-        asyncStub = JuanTamadGrpc.newStub(channel);
+        
+        // Create metadata with the API key
+        Metadata metadata = new Metadata();
+        Metadata.Key<String> apiKeyHeader = Metadata.Key.of("api-key", Metadata.ASCII_STRING_MARSHALLER);
+        metadata.put(apiKeyHeader, "BN7O1MMUMnVkXpSampleKeyOnlyForThiSProjeCTNiGOE9yMXnQRkZqAtm");
+
+        // Attach metadata to the stub
+        blockingStub = MetadataUtils.attachHeaders(JuanTamadGrpc.newBlockingStub(channel), metadata);       
+        asyncStub = MetadataUtils.attachHeaders(JuanTamadGrpc.newStub(channel), metadata);
     }
 
     public void checkTraffic() {

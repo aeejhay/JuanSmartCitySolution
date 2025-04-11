@@ -13,6 +13,9 @@ import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
 import generated.grpc.litolapis.*;
+import generated.grpc.marites.MaritesGrpc;
+import io.grpc.Metadata;
+import io.grpc.stub.MetadataUtils;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -27,8 +30,15 @@ public class LitoLapisClient {
         ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 50053)
                 .usePlaintext()
                 .build();
-        blockingStub = LitoLapisGrpc.newBlockingStub(channel);
-        asyncStub = LitoLapisGrpc.newStub(channel);
+        
+        // Create metadata with the API key
+        Metadata metadata = new Metadata();
+        Metadata.Key<String> apiKeyHeader = Metadata.Key.of("api-key", Metadata.ASCII_STRING_MARSHALLER);
+        metadata.put(apiKeyHeader, "BN7O1MMUMnVkXpSampleKeyOnlyForThiSProjeCTNiGOE9yMXnQRkZqAtm");
+
+        // Attach metadata to the stub
+        blockingStub = MetadataUtils.attachHeaders(LitoLapisGrpc.newBlockingStub(channel), metadata);       
+        asyncStub = MetadataUtils.attachHeaders(LitoLapisGrpc.newStub(channel), metadata);
     }
 
     public void getStudentLocation() {

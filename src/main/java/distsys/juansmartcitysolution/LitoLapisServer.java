@@ -9,10 +9,12 @@
  */
 package distsys.juansmartcitysolution;
 
+import distsys.security.AuthInterceptor;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.grpc.stub.StreamObserver;
 import generated.grpc.litolapis.*;
+import io.grpc.ServerInterceptors;
 
 import java.io.IOException;
 import java.util.logging.Logger;
@@ -23,7 +25,7 @@ public class LitoLapisServer extends LitoLapisGrpc.LitoLapisImplBase {
     public static void main(String[] args) throws IOException, InterruptedException {
         LitoLapisServer server = new LitoLapisServer();
         Server grpcServer = ServerBuilder.forPort(50053)
-                .addService(server)
+                .addService(ServerInterceptors.intercept(server, new AuthInterceptor()))
                 .build()
                 .start();
 
