@@ -49,28 +49,36 @@ public class LitoLapisClient {
         System.out.println("Location: " + response.getLatitude() + ", " + response.getLongitude());
     }
 
-    public void trackStudentLive() {
+    public void trackStudentLive() throws InterruptedException {
         System.out.println("-------------------------------------------------------------");
-        System.out.println("Live Tracking Started...");
+        System.out.println("[Server Streaming] Live Tracking Started...");
+
+        CountDownLatch latch = new CountDownLatch(1);
         PenID penId = PenID.newBuilder().setPenSerial("PEN-001").build();
+
         asyncStub.trackStudentLive(penId, new StreamObserver<LocationUpdates>() {
             @Override
             public void onNext(LocationUpdates update) {
-                System.out.println(update.getStudentName() + " moved to: " + update.getGps().getLatitude() + ", " + update.getGps().getLongitude());
+                System.out.println(update.getStudentName() + " moved to: " + 
+                                   update.getGps().getLatitude() + ", " + update.getGps().getLongitude());
             }
 
             @Override
             public void onError(Throwable t) {
                 System.out.println("Error: " + t.getMessage());
+                latch.countDown();
             }
 
             @Override
             public void onCompleted() {
                 System.out.println("Student tracking completed.");
+                latch.countDown();
             }
         });
+
+        latch.await(20, TimeUnit.SECONDS);  // Wait until stream is done
     }
-    
+
     public void alertLostStudent() throws InterruptedException {
         
         CountDownLatch latch = new CountDownLatch(1);
@@ -113,15 +121,15 @@ public class LitoLapisClient {
     }
 
 
-    public static void main(String[] args) {
+   public static void main(String[] args) {
         LitoLapisClient client = new LitoLapisClient();
         client.getStudentLocation();
-        client.trackStudentLive();
         try {
+            client.trackStudentLive();
             client.alertLostStudent();
         } catch (InterruptedException ex) {
             Logger.getLogger(LitoLapisClient.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
     }
+   
 }

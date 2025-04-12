@@ -49,9 +49,16 @@ public class JuanTamadClient {
         System.out.println("-------------------------------------------------");
     }
 
-    public void getLiveTrafficUpdates() {
+    public void getLiveTrafficUpdates() throws InterruptedException {
         System.out.println("Live Traffic Updates Started...");
-        Location location = Location.newBuilder().setCity("Quezon City").setStreet("EDSA").build();
+        
+        //need to wait to keep client alive and until the server sends all the message and complete
+        CountDownLatch latch = new CountDownLatch(1);
+
+        Location location = Location.newBuilder()
+                .setCity("Quezon City")
+                .setStreet("EDSA")
+                .build();
         asyncStub.liveTrafficReports(location, new StreamObserver<TrafficUpdate>() {
             @Override
             public void onNext(TrafficUpdate update) {
@@ -61,13 +68,17 @@ public class JuanTamadClient {
             @Override
             public void onError(Throwable t) {
                 System.out.println("Error: " + t.getMessage());
+                latch.countDown();
             }
 
             @Override
             public void onCompleted() {
                 System.out.println("Traffic updates completed.");
+                latch.countDown();
             }
         });
+        
+        latch.await(20, TimeUnit.SECONDS);  // Wait for server to finish
         System.out.println("-------------------------------------------------");
     }
 
@@ -91,7 +102,7 @@ public class JuanTamadClient {
             }
         });
 
-        requestObserver.onNext(UserInput.newBuilder().setUsername("User123").setTrafficCondition("Heavy").build());
+        requestObserver.onNext(UserInput.newBuilder().setUsername("JuanDelaCruz").setTrafficCondition("Heavy").build());
         requestObserver.onCompleted();
         latch.await(3, TimeUnit.SECONDS);
         System.out.println("-------------------------------------------------");

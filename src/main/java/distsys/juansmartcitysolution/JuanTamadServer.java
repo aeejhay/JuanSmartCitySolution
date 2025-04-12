@@ -20,9 +20,18 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 public class JuanTamadServer extends JuanTamadGrpc.JuanTamadImplBase {
-    private static final Logger logger = Logger.getLogger(JuanTamadServer.class.getName());
+    private static final Logger logger = Logger.getLogger(JuanTamadServer.class.getName()); 
+    
+    private static boolean started = false;
 
     public static void main(String[] args) throws IOException, InterruptedException {
+        
+         if (started) {
+            System.out.println("Juan Tamad Server already running.");
+            return;
+        }
+        started = true;
+        
         JuanTamadServer server = new JuanTamadServer();
         Server grpcServer = ServerBuilder.forPort(50052)
                 .addService(ServerInterceptors.intercept(server, new AuthInterceptor()))
@@ -49,7 +58,9 @@ public class JuanTamadServer extends JuanTamadGrpc.JuanTamadImplBase {
     @Override
     public void liveTrafficReports(Location request, StreamObserver<TrafficUpdate> responseObserver) {
         logger.info("Sending live traffic updates for " + request.getCity());
-
+           
+        //Simulated traffic congestion level using for loops
+        
         for (int i = 0; i < 5; i++) {
             TrafficUpdate update = TrafficUpdate.newBuilder()
                     .setLocation(request.getCity() + ", " + request.getStreet())
@@ -60,7 +71,7 @@ public class JuanTamadServer extends JuanTamadGrpc.JuanTamadImplBase {
             responseObserver.onNext(update);
 
             try {
-                Thread.sleep(3000); // Simulated update delay
+                Thread.sleep(2000); // Simulated update delay
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

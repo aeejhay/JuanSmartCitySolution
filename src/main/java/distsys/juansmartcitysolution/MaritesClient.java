@@ -56,6 +56,8 @@ public class MaritesClient {
 
     public void startLiveSurveillance() throws InterruptedException {
     System.out.println("Live Surveillance Started...");
+    
+    //need to wait to keep client alive and until the server sends all the message and complete
     CountDownLatch latch = new CountDownLatch(1);
 
     Location location = Location.newBuilder()
