@@ -1,78 +1,102 @@
-# Juan Smart City Solution 🚦🧠  
-*A gRPC-Based Simulation of Smart City Services for Distributed Systems*
+# Juan Smart City Solution – A gRPC-Based Simulation
 
-## 📘 Overview
+## 👨‍💻 About the Project
+This project simulates a smart city ecosystem using **gRPC in Java**. It demonstrates **Unary**, **Server Streaming**, **Client Streaming**, and **Bi-Directional Streaming** across three original services:
 
-This project is a simulation of a Smart City ecosystem using **gRPC** and Java. It demonstrates **four types of gRPC communication**—Unary, Server Streaming, Client Streaming, and Bi-Directional Streaming—across **three microservices**, visualized through a desktop GUI.
+- **Marites** – AI Public Camera Robot
+- **Juan Tamad** – Traffic Oracle
+- **Lito Lapis** – Smart GPS Pen for Students
 
-Built as part of the **Distributed Systems CA_2025** module at NCI.
-
----
-
-## 🏙 Smart Services
-
-### 1. **Marites** – AI Public Camera Robot
-- Prevents crime by using facial recognition and live threat alerts.
-- **gRPC Types Used:** Unary, Server Streaming, Client Streaming
-
-### 2. **Juan Tamad** – Smart Traffic Oracle
-- Analyzes and broadcasts traffic congestion using real-time and crowdsourced data.
-- **gRPC Types Used:** Unary, Server Streaming, Client Streaming
-
-### 3. **Lito Lapis** – Smart GPS Pen for Students
-- Monitors and alerts child movement in city centers to prevent abduction.
-- **gRPC Types Used:** Unary, Server Streaming, Bi-Directional Streaming
+Developed as part of the Distributed Systems module (CA_2025).
 
 ---
 
-## 💡 Technologies Used
-
-- Java 17+
-- gRPC & Protocol Buffers
-- Maven
-- Swing (Java GUI)
-- NetBeans IDE 17
+## 🎯 Project Goals
+- Implement real-time communication using gRPC
+- Simulate smart services and interactions
+- Demonstrate all gRPC RPC types
+- Include authentication, discovery, and error handling
+- Provide a Java Swing GUI to simulate client usage
 
 ---
 
-## 📂 Project Structure
+## 🧠 Smart Services Breakdown
+### 🔍 Marites Service (Crime Detection)
+- `ScanFace()` – Unary
+- `LiveSurveillance()` – Server Streaming
+- `ReportSuspiciousActivity()` – Client Streaming
 
-/src ├── distsys.marites 
-│ └── MaritesServer.java / MaritesClient.java 
-├── distsys.juantamad 
-│ └── JuanTamadServer.java / JuanTamadClient.java
-├── distsys.litolapis 
-│ └── LitoLapisServer.java / LitoLapisClient.java 
-├── distsys.juansmartcitysolution 
-│ └── JuanSmartCityDashboard.java 
-└── /proto 
-├── marites.proto 
-├── juantamad.proto 
-└── litolapis.proto
+### 🚦 Juan Tamad Service (Traffic Reports)
+- `CheckTrafficStatus()` – Unary
+- `LiveTrafficReports()` – Server Streaming
+- `CrowdsourcedTrafficData()` – Client Streaming
 
+### 📍 Lito Lapis Service (Child Tracking)
+- `GetCurrentLocation()` – Unary
+- `TrackStudentLive()` – Server Streaming
+- `AlertLostStudent()` – Bi-Directional Streaming
 
 ---
 
 ## 🖥 GUI Dashboard
-
-The `JuanSmartCityDashboard` lets users simulate:
-- Each service's gRPC methods
-- Live results displayed in a single **Results** area
-- Real gRPC calls or simulations via buttons per service
+Built in Java Swing to:
+- Launch services and clients
+- Show live status (ONLINE/OFFLINE)
+- Display logs in output area
+- Support log export and clearing
 
 ---
 
-## 🔧 How to Run
+## 🔐 Authentication
+Implemented via `AuthInterceptor.java` which simulates API key validation using gRPC metadata.
 
-> ⚠️ Requires Java 17+ and Maven.
+---
 
-1. Clone the repository  
-   ```bash
-   git clone https://github.com/your-username/juan-smart-city-solution.git
-   cd juan-smart-city-solution
+## 🌐 Service Discovery
+Custom `ServiceRegistry.java` and `ServiceHealth.java` simulate service discovery and availability checks.
 
+---
 
-Adrian Jandongan
-Higher Diploma in Science in Computing
-National College of Ireland
+## 📚 UML Diagrams Included
+- ✅ Component Diagram
+- ✅ Sequence Diagram
+- ✅ Class Diagram
+- ✅ Deployment Diagram
+
+All diagrams are in the `/docs/diagrams/` folder (or can be generated from PlantUML scripts).
+
+---
+
+## 📁 Folder Structure
+```
+├── proto/                  # .proto service definitions
+├── src/distsys/...         # All services and GUI code
+├── docs/                   # UML Diagrams and Report
+├── logs/                   # Exported log files from GUI
+├── README.md               # This file
+```
+
+---
+
+## 🚀 How to Run
+1. Compile `.proto` files using `protoc`
+2. Run `JuanSmartCityDashboard.java` in NetBeans or via terminal
+3. Click "Run Server" for any service tab
+4. Use buttons to simulate gRPC calls
+
+---
+
+## 📄 Final Report
+Soon
+
+---
+
+## 🤝 Credits
+Adrian Jandongan – Higher Diploma in Computing  
+Distributed Systems Module – CA_2025
+
+---
+
+## 📝 License
+For educational use only.
 
