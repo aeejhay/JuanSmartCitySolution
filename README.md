@@ -1,7 +1,5 @@
 # Juan Smart City Solution – A gRPC-Based Simulation
 
-![Banner](https://via.placeholder.com/1200x400.png?text=Juan+Smart+City+Solution)
-
 ## 👨‍💻 About the Project
 This project simulates a smart city ecosystem using **gRPC in Java**. It demonstrates **Unary**, **Server Streaming**, **Client Streaming**, and **Bi-Directional Streaming** across three original services:
 
