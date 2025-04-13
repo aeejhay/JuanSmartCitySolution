@@ -21,9 +21,12 @@ import java.util.logging.Logger;
 
 public class LitoLapisServer extends LitoLapisGrpc.LitoLapisImplBase {
     private static final Logger logger = Logger.getLogger(LitoLapisServer.class.getName());
-
+    
     public static void main(String[] args) throws IOException, InterruptedException {
+        //declare object
         LitoLapisServer server = new LitoLapisServer();
+        
+        //port and authentictaion
         Server grpcServer = ServerBuilder.forPort(50053)
                 .addService(ServerInterceptors.intercept(server, new AuthInterceptor()))
                 .build()
@@ -32,7 +35,8 @@ public class LitoLapisServer extends LitoLapisGrpc.LitoLapisImplBase {
         logger.info("Lito Lapis Server started on port 50053");
         grpcServer.awaitTermination();
     }
-
+    
+    //Get student location method, simulates unary one client request and one server response
     @Override
     public void getCurrentLocation(PenID request, StreamObserver<GPSData> responseObserver) {
         logger.info("Fetching GPS location for Pen ID: " + request.getPenSerial());
@@ -46,7 +50,8 @@ public class LitoLapisServer extends LitoLapisGrpc.LitoLapisImplBase {
         responseObserver.onNext(response);
         responseObserver.onCompleted();
     }
-
+    
+    //Track student live method, simulates Server streaming, client will request once ans server will response multiple messages
     @Override
     public void trackStudentLive(PenID request, StreamObserver<LocationUpdates> responseObserver) {
         logger.info("Tracking student with Pen ID: " + request.getPenSerial());
@@ -71,6 +76,7 @@ public class LitoLapisServer extends LitoLapisGrpc.LitoLapisImplBase {
         responseObserver.onCompleted();
     }
     
+    //Alert student method, it is a bi-directional type. Client will request multiple streams and server will response multiple streams
     @Override
     public StreamObserver<GPSData> alertLostStudent(StreamObserver<SafetyAlert> responseObserver) {
         return new StreamObserver<GPSData>() {

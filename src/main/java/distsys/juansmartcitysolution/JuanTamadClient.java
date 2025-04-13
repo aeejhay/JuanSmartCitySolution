@@ -9,8 +9,6 @@ package distsys.juansmartcitysolution;
  * @author ajand
  */
 
-//this is a sample comment
-
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
@@ -22,6 +20,7 @@ import java.util.concurrent.TimeUnit;
 import io.grpc.Metadata;
 import io.grpc.stub.MetadataUtils;
 
+
 public class JuanTamadClient {
     private final JuanTamadGrpc.JuanTamadBlockingStub blockingStub;
     private final JuanTamadGrpc.JuanTamadStub asyncStub;
@@ -31,7 +30,7 @@ public class JuanTamadClient {
                 .usePlaintext()
                 .build();
         
-        // Create metadata with the API key
+        // Create metadata with the API key / authentication
         Metadata metadata = new Metadata();
         Metadata.Key<String> apiKeyHeader = Metadata.Key.of("api-key", Metadata.ASCII_STRING_MARSHALLER);
         metadata.put(apiKeyHeader, "BN7O1MMUMnVkXpSampleKeyOnlyForThiSProjeCTNiGOE9yMXnQRkZqAtm");
@@ -40,7 +39,8 @@ public class JuanTamadClient {
         blockingStub = MetadataUtils.attachHeaders(JuanTamadGrpc.newBlockingStub(channel), metadata);       
         asyncStub = MetadataUtils.attachHeaders(JuanTamadGrpc.newStub(channel), metadata);
     }
-
+    
+    //Check traffic method (unary type of request) client request once and server response once
     public void checkTraffic() {
         System.out.println("Checking Traffic...");
         Location location = Location.newBuilder().setCity("Makati").setStreet("Ayala Ave").build();
@@ -48,7 +48,8 @@ public class JuanTamadClient {
         System.out.println("Traffic: " + response.getCongestionLevel() + " | Advice: " + response.getSuggestion());
         System.out.println("-------------------------------------------------");
     }
-
+    
+    //Get the live traffic updates method request it once and server will response multiple (server streaming)
     public void getLiveTrafficUpdates() throws InterruptedException {
         System.out.println("Live Traffic Updates Started...");
         
@@ -81,7 +82,8 @@ public class JuanTamadClient {
         latch.await(20, TimeUnit.SECONDS);  // Wait for server to finish
         System.out.println("-------------------------------------------------");
     }
-
+    
+    //Report traffic data method, client will request multiple request and server will response once (Client Streaming)
     public void reportTrafficData() throws InterruptedException {
         CountDownLatch latch = new CountDownLatch(1);
         StreamObserver<UserInput> requestObserver = asyncStub.crowdsourcedTrafficData(new StreamObserver<CityTrafficAnalysis>() {
@@ -107,7 +109,8 @@ public class JuanTamadClient {
         latch.await(3, TimeUnit.SECONDS);
         System.out.println("-------------------------------------------------");
     }
-
+    
+    //main method here includes declaration or instantiate new object
     public static void main(String[] args) throws InterruptedException {
         JuanTamadClient client = new JuanTamadClient();
         client.checkTraffic();

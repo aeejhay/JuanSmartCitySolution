@@ -40,7 +40,8 @@ public class LitoLapisClient {
         blockingStub = MetadataUtils.attachHeaders(LitoLapisGrpc.newBlockingStub(channel), metadata);       
         asyncStub = MetadataUtils.attachHeaders(LitoLapisGrpc.newStub(channel), metadata);
     }
-
+    
+    //Get student location method, simulates unary one client request and one server response
     public void getStudentLocation() {
         System.out.println("-------------------------------------------------------------");
         System.out.println("Fetching Student Location...");
@@ -48,7 +49,8 @@ public class LitoLapisClient {
         GPSData response = blockingStub.getCurrentLocation(penId);
         System.out.println("Location: " + response.getLatitude() + ", " + response.getLongitude());
     }
-
+    
+    //Track student live method, simulates Server streaming, client will request once ans server will response multiple messages
     public void trackStudentLive() throws InterruptedException {
         System.out.println("-------------------------------------------------------------");
         System.out.println("[Server Streaming] Live Tracking Started...");
@@ -78,7 +80,8 @@ public class LitoLapisClient {
 
         latch.await(20, TimeUnit.SECONDS);  // Wait until stream is done
     }
-
+    
+    //Alert student method, it is a bi-directional type. Client will request multiple streams and server will response multiple streams
     public void alertLostStudent() throws InterruptedException {
         
         CountDownLatch latch = new CountDownLatch(1);
@@ -120,7 +123,7 @@ public class LitoLapisClient {
         latch.await(5, TimeUnit.SECONDS);
     }
 
-
+   //main method here, includes declaration or instantiate object
    public static void main(String[] args) {
         LitoLapisClient client = new LitoLapisClient();
         client.getStudentLocation();

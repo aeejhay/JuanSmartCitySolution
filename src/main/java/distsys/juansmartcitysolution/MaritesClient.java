@@ -35,7 +35,7 @@ public class MaritesClient {
                 .build();
         
         
-        // Create metadata with the API key
+        // Create metadata with the API key / authentication
         Metadata metadata = new Metadata();
         Metadata.Key<String> apiKeyHeader = Metadata.Key.of("api-key", Metadata.ASCII_STRING_MARSHALLER);
         metadata.put(apiKeyHeader, "BN7O1MMUMnVkXpSampleKeyOnlyForThiSProjeCTNiGOE9yMXnQRkZqAtm");
@@ -45,7 +45,8 @@ public class MaritesClient {
         asyncStub = MetadataUtils.attachHeaders(MaritesGrpc.newStub(channel), metadata);
         
     }
-
+    
+    //Scan Face method demonstrates Unary - clien request once and server response once.
     public void scanFace() {
         System.out.println("Scanning Face...");
         PersonImage image = PersonImage.newBuilder().setImageData(byteString).build();
@@ -54,6 +55,7 @@ public class MaritesClient {
         System.out.println("-------------------------------------------------");
     }
 
+    //Start Live Surveillance method represent the Server streaming where client request once and server will response multiple streams
     public void startLiveSurveillance() throws InterruptedException {
     System.out.println("Live Surveillance Started...");
     
@@ -83,12 +85,11 @@ public class MaritesClient {
             latch.countDown();
         }
     });
+        latch.await(20, TimeUnit.SECONDS);  // Wait for server to finish
+        System.out.println("-------------------------------------------------");
+    }
 
-    latch.await(20, TimeUnit.SECONDS);  // Wait for server to finish
-    System.out.println("-------------------------------------------------");
-}
-
-
+    //Report Suspicious Activity method, Client streaming - where client request multiple streams and server will responce once
     public void reportSuspiciousActivity() throws InterruptedException {
         System.out.println("Report Suspicious Activity...");
         CountDownLatch latch = new CountDownLatch(1);
@@ -119,7 +120,8 @@ public class MaritesClient {
         latch.await(3, TimeUnit.SECONDS);
         System.out.println("-------------------------------------------------");
     }
-
+    
+    //main method and declare / instantiate new object
     public static void main(String[] args) throws InterruptedException {
         MaritesClient client = new MaritesClient();
         client.scanFace();

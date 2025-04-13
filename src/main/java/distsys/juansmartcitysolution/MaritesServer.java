@@ -21,18 +21,13 @@ import java.util.logging.Logger;
 
 public class MaritesServer extends MaritesGrpc.MaritesImplBase {
     private static final Logger logger = Logger.getLogger(MaritesServer.class.getName());
-    
-    private static boolean started = false;
 
     public static void main(String[] args) throws IOException, InterruptedException {
         
-        if (started) {
-            System.out.println("Marites Server already running.");
-            return;
-        }
-        started = true;
-        
+        //instantiate new object
         MaritesServer server = new MaritesServer();
+        
+        //port and authentication
         Server grpcServer = ServerBuilder.forPort(50051)
                 .addService(ServerInterceptors.intercept(server, new AuthInterceptor()))
                 .build()
@@ -42,6 +37,7 @@ public class MaritesServer extends MaritesGrpc.MaritesImplBase {
         grpcServer.awaitTermination();
     }
 
+    //Scan Face method demonstrates Unary - clien request once and server response once.
     @Override
     public void scanFace(PersonImage request, StreamObserver<IdentityData> responseObserver) {
         logger.info("Processing face scan...");
@@ -56,7 +52,8 @@ public class MaritesServer extends MaritesGrpc.MaritesImplBase {
         responseObserver.onNext(response);
         responseObserver.onCompleted();
     }
-
+    
+    //Start Live Surveillance method represent the Server streaming where client request once and server will response multiple streams
     @Override
     public void liveSurveillance(Location request, StreamObserver<CrimeAlert> responseObserver) {
         logger.info("Starting live surveillance at " + request.getCity());
@@ -81,6 +78,7 @@ public class MaritesServer extends MaritesGrpc.MaritesImplBase {
         responseObserver.onCompleted();
     }
 
+    //Report Suspicious Activity method, Client streaming - where client request multiple streams and server will responce once
     @Override
     public StreamObserver<PersonData> reportSuspiciousActivity(StreamObserver<InvestigationReport> responseObserver) {
         return new StreamObserver<PersonData>() {

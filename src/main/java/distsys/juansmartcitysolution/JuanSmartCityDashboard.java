@@ -1,5 +1,6 @@
 /*
  * Juan Smart City Dashboard - with Status-Tagged Tabs for Service Availability
+ * @author ajand
  */
 package distsys.juansmartcitysolution;
 
