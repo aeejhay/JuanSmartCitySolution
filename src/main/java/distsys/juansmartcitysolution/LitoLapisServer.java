@@ -80,28 +80,27 @@ public class LitoLapisServer extends LitoLapisGrpc.LitoLapisImplBase {
     @Override
     public StreamObserver<GPSData> alertLostStudent(StreamObserver<SafetyAlert> responseObserver) {
         return new StreamObserver<GPSData>() {
-            @Override
-            public void onNext(GPSData gpsData) {
-                System.out.println("Received GPS: " + gpsData.getLatitude() + ", " + gpsData.getLongitude());
 
-                if (gpsData.getLatitude() > 15.0) {
-                    SafetyAlert alert = SafetyAlert.newBuilder()
-                            .setAlertMessage("Student might be lost!")
-                            .setLastKnownLocation(gpsData)
-                            .build();
-                    responseObserver.onNext(alert);
-                }
+            @Override
+            public void onNext(GPSData data) {
+                System.out.println("Received GPS: " + data.getLatitude() + ", " + data.getLongitude());
+
+                SafetyAlert alert = SafetyAlert.newBuilder()
+                        .setAlertMessage("Alert: Stop detected at " + data.getLatitude() + ", " + data.getLongitude())
+                        .build();
+
+                responseObserver.onNext(alert);
             }
 
             @Override
             public void onError(Throwable t) {
-                System.err.println("Error in bi-directional stream: " + t.getMessage());
+                System.out.println("Error: " + t.getMessage());
             }
 
             @Override
             public void onCompleted() {
+                System.out.println("All GPS data received.");
                 responseObserver.onCompleted();
-                System.out.println("Bi-directional streaming completed.");
             }
         };
     }

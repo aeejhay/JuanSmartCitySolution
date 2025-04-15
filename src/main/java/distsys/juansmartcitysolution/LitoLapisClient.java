@@ -83,56 +83,58 @@ public class LitoLapisClient {
     
     //Alert student method, it is a bi-directional type. Client will request multiple streams and server will response multiple streams
     public void alertLostStudent() throws InterruptedException {
-        
+        System.out.println("-------------------------------------------------------------");
+        System.out.println("[Bi-Directional Streaming] Starting lost student alert...");
+
         CountDownLatch latch = new CountDownLatch(1);
-        
+
         StreamObserver<GPSData> requestObserver = asyncStub.alertLostStudent(new StreamObserver<SafetyAlert>() {
-           @Override
-           public void onNext(SafetyAlert alert) {
-               System.out.println("-------------------------------------------------------------");
-               System.out.println("ALERT: " + alert.getAlertMessage() +
-                                  " at " + alert.getLastKnownLocation().getLatitude());
-           }
+            @Override
+            public void onNext(SafetyAlert alert) {
+                System.out.println("Server Alert: " + alert.getAlertMessage());
+            }
 
-           @Override
-           public void onError(Throwable t) {
-               System.err.println("Error: " + t.getMessage());
-               latch.countDown();
-           }
+            @Override
+            public void onError(Throwable t) {
+                System.out.println("Error: " + t.getMessage());
+                latch.countDown();
+            }
 
-           @Override
-           public void onCompleted() {
-               System.out.println("Stream finished.");
-               latch.countDown();
-           }
-       });
-        
-        // Send sample GPS data
-        for (int i = 0; i < 3; i++) {
+            @Override
+            public void onCompleted() {
+                System.out.println("Alert stream completed.");
+                latch.countDown();
+            }
+        });
+
+        // Simulate sending 10 GPS data points
+        for (int i = 1; i <= 10; i++) {
             GPSData gps = GPSData.newBuilder()
-                    .setLatitude(14.6 + i)
-                    .setLongitude(120.9 + i)
-                    .setTimestamp(String.valueOf(System.currentTimeMillis()))
+                    .setLatitude(14.5 + (i * 0.001))
+                    .setLongitude(121.0 + (i * 0.001))
                     .build();
 
+            System.out.println("Sending GPSData: " + gps.getLatitude() + ", " + gps.getLongitude());
             requestObserver.onNext(gps);
-            Thread.sleep(1000);
+            Thread.sleep(500); // simulate interval
         }
 
+        // Finish the client stream
         requestObserver.onCompleted();
-        latch.await(5, TimeUnit.SECONDS);
+        latch.await(10, TimeUnit.SECONDS);
+        System.out.println("-------------------------------------------------------------");
     }
 
    //main method here, includes declaration or instantiate object
-   public static void main(String[] args) {
-        LitoLapisClient client = new LitoLapisClient();
-        client.getStudentLocation();
-        try {
-            client.trackStudentLive();
-            client.alertLostStudent();
-        } catch (InterruptedException ex) {
-            Logger.getLogger(LitoLapisClient.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-   
+    public static void main(String[] args) {
+         LitoLapisClient client = new LitoLapisClient();
+         client.getStudentLocation();
+         try {
+             client.trackStudentLive();
+             client.alertLostStudent();
+         } catch (InterruptedException ex) {
+             Logger.getLogger(LitoLapisClient.class.getName()).log(Level.SEVERE, null, ex);
+         }
+     }
+
 }
