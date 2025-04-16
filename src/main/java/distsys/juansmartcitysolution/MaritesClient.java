@@ -6,7 +6,7 @@ package distsys.juansmartcitysolution;
 
 /**
  *
- * @author ajand
+ * @author ajandongan
  */
 
 import io.grpc.ManagedChannel;
@@ -25,7 +25,7 @@ public class MaritesClient {
     private final MaritesGrpc.MaritesBlockingStub blockingStub;
     private final MaritesGrpc.MaritesStub asyncStub;
     
-    //Just for simulation I used fakeData
+    //Just for simulation I used fakeData for scanning a image
     byte[] fakeData = new byte[10]; // simulate image
     ByteString byteString = ByteString.copyFrom(fakeData);
 

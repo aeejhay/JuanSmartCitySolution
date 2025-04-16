@@ -9,6 +9,7 @@ import io.grpc.*;
 /**
  * A simple gRPC server-side interceptor to simulate authentication
  * by checking a hardcoded API key sent in the metadata headers.
+ * @author ajandongan
  */
 public class AuthInterceptor implements ServerInterceptor {
 

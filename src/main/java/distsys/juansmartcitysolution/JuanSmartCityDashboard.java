@@ -1,6 +1,6 @@
 /*
  * Juan Smart City Dashboard - with Status-Tagged Tabs for Service Availability
- * @author ajand
+ * @author ajandongan
  */
 package distsys.juansmartcitysolution;
 
@@ -64,7 +64,7 @@ public class JuanSmartCityDashboard extends JFrame {
         JButton clearBtn = new JButton("❌ Clear Results");
         clearBtn.addActionListener(e -> clientArea.setText(""));
 
-        JButton runServerBtn = new JButton("▶ Run Server");
+        JButton runServerBtn = new JButton("▶ Run " + serviceName + " Server");
         runServerBtn.addActionListener(e -> {
             runServer(serviceName);
             clientArea.append("[INFO] " + serviceName + " server running...\n");

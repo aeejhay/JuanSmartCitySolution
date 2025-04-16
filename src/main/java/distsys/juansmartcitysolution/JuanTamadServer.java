@@ -6,7 +6,7 @@ package distsys.juansmartcitysolution;
 
 /**
  *
- * @author ajand
+ * @author ajandongan
  */
 
 import distsys.security.AuthInterceptor;

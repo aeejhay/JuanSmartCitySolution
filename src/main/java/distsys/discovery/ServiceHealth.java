@@ -6,7 +6,7 @@ package distsys.discovery;
 
 /**
  *
- * @author ajand
+ * @author ajandongan
  */
 
 import java.io.IOException;

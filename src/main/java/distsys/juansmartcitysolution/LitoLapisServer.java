@@ -5,7 +5,7 @@
 
 /**
  *
- * @author ajand
+ * @author ajandongan
  */
 package distsys.juansmartcitysolution;
 
@@ -39,7 +39,7 @@ public class LitoLapisServer extends LitoLapisGrpc.LitoLapisImplBase {
     //Get student location method, simulates unary one client request and one server response
     @Override
     public void getCurrentLocation(PenID request, StreamObserver<GPSData> responseObserver) {
-        logger.info("Fetching GPS location for Pen ID: " + request.getPenSerial());
+        logger.info("[Unary] Fetching GPS location for Pen ID: " + request.getPenSerial());
 
         GPSData response = GPSData.newBuilder()
                 .setLatitude(14.5995)
